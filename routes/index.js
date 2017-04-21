@@ -71,7 +71,6 @@ router.post('/todo', function(req, res) {
 			else
 			{
 				done();
-				console.log(result);
 				res.status(200).send("new task added");
 			}
 		});
