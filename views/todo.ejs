@@ -24,6 +24,8 @@
 
 <script>
 
+	var HOSTURL = "https://young-retreat-32343.herokuapp.com/todo";
+
 	var form = document.querySelector('.add_newtask_form');
 	var task_list = document.querySelector('#task_list');
 
@@ -103,7 +105,7 @@
 	{
 		var xhttp = new XMLHttpRequest();
 
-		xhttp.open("GET", "https://young-retreat-32343.herokuapp.com/todo/allTasks", true);
+		xhttp.open("GET", HOSTURL+"/allTasks", true);
 
 		xhttp.onreadystatechange = function()
 		{
@@ -142,7 +144,7 @@
 	{
 		var xhttp = new XMLHttpRequest();
 
-		xhttp.open("POST", "https://young-retreat-32343.herokuapp.com/todo", true);
+		xhttp.open("POST", HOSTURL, true);
 		xhttp.setRequestHeader('Content-Type', 'application/json');
 
 		xhttp.onreadystatechange = function()
@@ -161,7 +163,7 @@
 		var delete_task = evt.target.task;
 		var xhttp = new XMLHttpRequest();
 
-		xhttp.open("DELETE", "https://young-retreat-32343.herokuapp.com/todo", true);
+		xhttp.open("DELETE", HOSTURL, true);
 		xhttp.setRequestHeader('Content-Type', 'application/json');
 
 		xhttp.onreadystatechange = function()
@@ -181,7 +183,7 @@
 		var complete_task = evt.target.task;
 		var xhttp = new XMLHttpRequest();
 
-		xhttp.open("PUT", "https://young-retreat-32343.herokuapp.com/todo", true);
+		xhttp.open("PUT", HOSTURL, true);
 		xhttp.setRequestHeader('Content-Type', 'application/json');
 
 		xhttp.onreadystatechange = function()
