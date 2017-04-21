@@ -2,12 +2,15 @@
 {
 	height: 100%;
 }
+li
+{
+	list-style: none;
+}
 .list-group
 {
 	max-width: 550px;
 	position: relative;
-	top: 50%;
-	transform: translateY(-50%);
+	top: 30px;
 }
 .list-group li
 {
@@ -44,7 +47,7 @@
 	background-color: white;
 	border: 1px solid #ccc;
 }
-.list-group-item-success span
+.list-group-item-success span.glyphicon-ok
 {
 	display: none;
 }

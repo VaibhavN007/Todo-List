@@ -8,39 +8,14 @@
 <center>
 	<div class="container">
 		
-		<ul class="list-group">
+		<ul class="list-group" id="task_list">
 			<li class="list-group-item">
 				<form class="add_newtask_form" method="post">
 					<div class="form-group">
-						<input type="text" class="form-control" id="newTask" name="task" placeholder="Add new Task">
+						<input type="text" class="form-control" id="newTask" name="task" placeholder="Add new Task" autofocus="true">
 						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
 					</div>
 				</form>
-			</li>
-			<li class="list-group-item">
-				Lorem ipsum dolor sit amet
-				<span class="glyphicon glyphicon-trash"></span>
-				<span class="glyphicon glyphicon-ok"></span>
-			</li>
-			<li class="list-group-item">
-				consectetur adipisicing elit
-				<span class="glyphicon glyphicon-trash"></span>
-				<span class="glyphicon glyphicon-ok"></span>
-			</li>
-			<li class="list-group-item">
-				Similique ipsam vero provident
-				<span class="glyphicon glyphicon-trash"></span>
-				<span class="glyphicon glyphicon-ok"></span>
-			</li>
-			<li class="list-group-item">
-				eum eligendi blanditiis ex explicabo 
-				<span class="glyphicon glyphicon-trash"></span>
-				<span class="glyphicon glyphicon-ok"></span>
-			</li>
-			<li class="list-group-item">
-				vitae nostrum facilis
-				<span class="glyphicon glyphicon-trash"></span>
-				<span class="glyphicon glyphicon-ok"></span>
 			</li>
 		</ul>
 
@@ -50,21 +25,104 @@
 <script>
 
 	var form = document.querySelector('.add_newtask_form');
+	var task_list = document.querySelector('#task_list');
 
+	//	create a task list element <li class="list-group-item"></li>
+	var task_elmt = document.createElement("li");
+
+	//	add class "list-group-item" to the list item
+	var attr = document.createAttribute("class");
+	attr.value = "list-group-item";
+	task_elmt.setAttributeNode(attr);
+
+	//	create a new span element
+	var delete_span = document.createElement('span');	
+	var complete_span = document.createElement('span');
+
+	//	add class "glyphicon glyphicon-trash" to the list item
+	var span_attr_1 = document.createAttribute("class");
+	span_attr_1.value = "glyphicon glyphicon-trash";
+	delete_span.setAttributeNode(span_attr_1);
+
+	//	add class "glyphicon glyphicon-ok" to the list item
+	var span_attr_2 = document.createAttribute("class");
+	span_attr_2.value = "glyphicon glyphicon-ok";
+	complete_span.setAttributeNode(span_attr_2);
+
+	//	form onsubmit
 	form.addEventListener('submit', function(e) {
 		e.preventDefault();
-		
-		var obj = getFormData();
-		
-		console.log(obj);
 
-		addTask(obj);
-		
-		form.reset();
+		var obj = getFormData();
+
+		if(obj.task!==undefined)
+		{
+			addTask(obj);
+			form.reset();
+		}
 
 		return false;
 	});
 
+	function createNewEntry(task_body, isCompleted)
+	{
+		var new_task_elmt = task_elmt.cloneNode(true);	// true makes all child node to be cloned as well
+		
+		// 	add text to the list item
+		var new_text_node = document.createTextNode(task_body);
+		new_task_elmt.appendChild(new_text_node);
+
+		if(isCompleted)
+		{
+			//	add class "list-group-item" to the list item
+			var new_attr = document.createAttribute("class");
+			new_attr.value = "list-group-item-success";
+			new_task_elmt.setAttributeNode(new_attr);
+		}
+
+		var new_delete_span = delete_span.cloneNode(true);
+
+		new_delete_span.task = task_body;
+		new_delete_span.parent = new_task_elmt;
+		new_delete_span.addEventListener('click', deleteTask, false);
+
+		var new_complete_span = complete_span.cloneNode(true);
+
+		new_complete_span.task = task_body;
+		new_complete_span.parent = new_task_elmt;
+		new_complete_span.addEventListener('click', completeTask, false);
+
+		new_task_elmt.appendChild(new_delete_span);
+		new_task_elmt.appendChild(new_complete_span);
+		new_task_elmt.appendChild(new_text_node);
+		task_list.appendChild(new_task_elmt);
+	}
+
+	//	retrive all the tasks from the database
+	function getAllTasks()
+	{
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.open("GET", "http://localhost:3000/todo/allTasks", true);
+
+		xhttp.onreadystatechange = function()
+		{
+			if (this.readyState == 4 && this.status == 200)
+			{
+				var res = JSON.parse(this.responseText);
+				
+				for (var i = 0; i < res.length; ++i) {
+					createNewEntry(res[i].task, res[i].completed);
+				}
+			}
+		};
+
+		xhttp.send();
+	};
+
+	getAllTasks();
+
+	//	get the form data to be submitted to database
 	function getFormData()
 	{
 		var elements = form.elements;
@@ -79,26 +137,64 @@
 		return formData;
 	}
 	
+	//	create a new task in the database
 	function addTask(newTask)
 	{
 		var xhttp = new XMLHttpRequest();
 
-		xhttp.open("POST", "http://localhost:3000/todo/add", true);
+		xhttp.open("POST", "http://localhost:3000/todo", true);
 		xhttp.setRequestHeader('Content-Type', 'application/json');
 
 		xhttp.onreadystatechange = function()
 		{
 			if (this.readyState == 4 && this.status == 200)
 			{
-				console.log(this.responseText);
-				// document.getElementById("demo").innerHTML = this.responseText;
+				createNewEntry(newTask.task, false);
+			}
+		};
+		xhttp.send(JSON.stringify(newTask));
+	}
+
+	//	deleted a task from database
+	function deleteTask(evt)
+	{
+		var delete_task = evt.target.task;
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.open("DELETE", "http://localhost:3000/todo", true);
+		xhttp.setRequestHeader('Content-Type', 'application/json');
+
+		xhttp.onreadystatechange = function()
+		{
+			if (this.readyState == 4 && this.status == 200)
+			{
+				evt.target.parent.style.display = "none";
 			}
 		};
 
-		console.log("sending", JSON.stringify(newTask));
-		
-		xhttp.send(JSON.stringify(newTask));
+		xhttp.send(JSON.stringify({ task: delete_task }));
 	}
+	
+	//	completed a task from database
+	function completeTask(evt)
+	{
+		var complete_task = evt.target.task;
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.open("PUT", "http://localhost:3000/todo", true);
+		xhttp.setRequestHeader('Content-Type', 'application/json');
+
+		xhttp.onreadystatechange = function()
+		{
+			if (this.readyState == 4 && this.status == 200)
+			{
+				evt.target.parent.classList.add("list-group-item-success");
+			}
+		};
+
+		xhttp.send(JSON.stringify({ task: complete_task }));
+	}
+
 </script>
 
 </body>
