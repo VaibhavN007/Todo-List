@@ -2,8 +2,10 @@ var express = require('express');
 var router = express.Router();
 
 var pg = require('pg');
-// process.env.DATABASE_URL
-var client = new pg.Client("postgres://vaibhav:vaibhav@localhost:5432/tododb");
+
+var client = new pg.Client(process.env.DATABASE_URL);
+// var client = new pg.Client("postgres://vaibhav:vaibhav@localhost:5432/tododb");
+
 client.connect();
 
 /* GET home page. */
