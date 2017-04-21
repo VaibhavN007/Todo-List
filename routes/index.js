@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 var pg = require('pg');
-
-var client = new Client(process.env.DATABASE_URL);
+// process.env.DATABASE_URL
+var client = new pg.Client("postgres://vaibhav:vaibhav@localhost:5432/tododb");
 client.connect();
 
 /* GET home page. */
@@ -19,10 +19,9 @@ router.get('/todo/allTasks', function(req, res) {
 	
 	client.query("SELECT task, completed FROM todotable", function(err, result) {
 		if(err)
-			done(err);
+			return console.log(err);
 		else
 		{
-			done();
 			res.status(200).send(result.rows);
 		}
 	});
@@ -32,10 +31,9 @@ router.post('/todo', function(req, res) {
 
 	client.query("INSERT INTO todotable(task) VALUES($1)", [req.body.task], function(err, result) {
 		if(err)
-			done(err);
+			return console.log(err);
 		else
 		{
-			done();
 			res.status(200).send("new task added");
 		}
 	});
@@ -45,10 +43,9 @@ router.post('/todo', function(req, res) {
 router.delete('/todo', function(req, res) {
 	client.query("DELETE FROM todotable WHERE task=$1", [req.body.task], function(err, result) {
 		if(err)
-			done(err);
+			return console.log(err);
 		else
 		{
-			done();
 			res.status(200).send("successfully deleted task");
 		}
 	});
@@ -59,10 +56,9 @@ router.put('/todo', function(req, res) {
 	
 	client.query("UPDATE todotable SET completed=true WHERE task=$1", [req.body.task], function(err, result) {
 		if(err)
-			done(err);
+			return console.log(err);
 		else
 		{
-			done();
 			res.status(200).send("successfully completed task");
 		}
 	});
