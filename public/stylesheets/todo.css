@@ -1,0 +1,58 @@
+.container
+{
+	height: 100%;
+}
+.list-group
+{
+	max-width: 550px;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.list-group li
+{
+	padding: 20px;
+}
+.list-group li>span
+{
+	float: right;
+	margin-right: 30px;
+	padding: 5px;
+	transform: translateY(-5px);
+}
+.list-group .form-group
+{
+	display: flex;
+	justify-content: space-around;
+}
+.list-group li input
+{
+	width: 80%;
+	display: inline;
+}
+.list-group li button
+{
+	display: inline;
+}
+.list-group li button span
+{
+	transform: translate(1px, -1px);
+}
+.list-group li button:hover
+{
+	color: blue;
+	background-color: white;
+	border: 1px solid #ccc;
+}
+.list-group-item-success span
+{
+	display: none;
+}
+.glyphicon-trash:hover
+{
+	color: red;
+}
+.glyphicon-ok:hover
+{
+	color: lightgreen;
+}
