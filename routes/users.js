@@ -7,18 +7,9 @@ var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcryptjs');
 
 var pg = require('pg');
+var db_config = require('../config/database_info');
 
-var config = {
-	user: 'chacttbbnwrmej',
-	database: 'd82d88st8qgqda',
-	password: '2ea3a76251205520ef12498870912b47711970becb8a39f201b5a946a5598bec',
-	host: 'ec2-54-163-252-55.compute-1.amazonaws.com',
-	port: 5432,
-	max: 10,
-	idleTimeoutMillis: 30000,
-};
-
-const pool = new pg.Pool(config);
+const pool = new pg.Pool(db_config);
 
 pool.on('error', function (err, client) {
   console.error('idle client error', err.message, err.stack);
@@ -36,7 +27,7 @@ passport.deserializeUser(function(id, done) {
 			return donePool(err);
 		}
 
-		client.query('SELECT * from usertable WHERE id=($1)', [id], function(err, res) {
+		client.query('SELECT * from public.usertable WHERE id=($1)', [id], function(err, res) {
 			if(err)
 				return done(err);
 			var userObj = {
@@ -62,7 +53,7 @@ passport.use('local-signup', new LocalStrategy({
 		}
 
 		// execute a query on our database
-		client.query('SELECT username::text from usertable WHERE username=($1)', [username], function (err, result) {
+		client.query('SELECT username::text from public.usertable WHERE username=($1)', [username], function (err, result) {
 			if (err) 
 			{
 				console.log("QUERY ERROR", err);
@@ -76,7 +67,7 @@ passport.use('local-signup', new LocalStrategy({
 			} else {
 				// console.log('username available');
 
-				client.query('INSERT INTO usertable(username, password) VALUES($1, $2) RETURNING id', [username, password], function(err, result1) {
+				client.query('INSERT INTO public.usertable(username, password) VALUES($1, $2) RETURNING id', [username, password], function(err, result1) {
 					if(err)
 					{
 						console.log(err);
@@ -110,7 +101,7 @@ passport.use('local-signin', new LocalStrategy(
 			}
 
 			// execute a query on our database
-			client.query('SELECT * from usertable WHERE username=($1)', [username], function (err, result) {
+			client.query('SELECT * from public.usertable WHERE username=($1)', [username], function (err, result) {
 				if (err) 
 				{
 					console.log("QUERY ERROR", err);
