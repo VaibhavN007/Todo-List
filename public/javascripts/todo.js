@@ -1,5 +1,4 @@
-// var HOSTURL = "https://young-retreat-32343.herokuapp.com/todo";
-var HOSTURL = "http://localhost:3000/todo";
+var HOSTURL = "https://young-retreat-32343.herokuapp.com/todo";
 
 var form = document.querySelector('.add_newtask_form');
 var task_list = document.querySelector('#task_list');
