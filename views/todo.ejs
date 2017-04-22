@@ -111,6 +111,7 @@
 		{
 			if (this.readyState == 4 && this.status == 200)
 			{
+				console.log(this.responseText);
 				var res = JSON.parse(this.responseText);
 				
 				for (var i = 0; i < res.length; ++i) {
@@ -152,7 +153,6 @@
 			if (this.readyState == 4 && this.status == 200)
 			{
 				createNewEntry(newTask.task, false);
-				console.log(this.responseText);
 			}
 		};
 		xhttp.send(JSON.stringify(newTask));
