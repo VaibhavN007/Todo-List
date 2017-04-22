@@ -1,11 +1,30 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<head>
+	<% include ./partials/head %>
+	<link rel="stylesheet" href="/stylesheets/todo.css">
+</head>
+<body>
+	<% include partials/header %>
+<center>
+
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Hello, world!</h1>
+			<p>
+				This is a simple Todo list
+				<br><br>
+				<a class="btn btn-primary btn-lg" href="/todo" role="button">Todo</a>
+				<br><br>
+				<a class="btn btn-primary btn-lg" href="http://vaibhavn007.github.io/" role="button">About Me</a>
+			</p>
+		</div>
+	</div>
+</center>
+
+<footer class="footer">
+	<div class="container-fluid">
+		<p class="text-muted">Made with <span style="color: #ff1493; font-size: 17px">&hearts;</span> by vaibhav</p>
+	</div>
+</footer>
+</body>
 </html>
