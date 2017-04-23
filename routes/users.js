@@ -227,7 +227,7 @@ router.get('/login', isNotAuthenticated, function(req, res) {
 
 router.post('/login', isNotAuthenticated, passport.authenticate('local-signin', {
 	// successRedirect: '/todo',
-	failureRedirect: '/users/register',
+	failureRedirect: '/users/login',
 	failureFlash: true
 }), function(req, res) {
 	// console.log('successfully logged in');
